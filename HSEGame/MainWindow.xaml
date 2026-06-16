@@ -1,0 +1,191 @@
+﻿<Window x:Class="HSEGame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HSEGame"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        xmlns:helix="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
+        Title="MainWindow" Height="450" Width="800" FontFamily="Times New Roman" FontSize="20pt" Closing="Window_Closing">
+
+    <Window.Resources>
+        <!-- Стиль для закругленных белых кнопок ответов -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="MinWidth" Value="400"/>
+            <Setter Property="MaxWidth" Value="400"/>
+            <Setter Property="MaxHeight" Value="100"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" 
+                        Background="{TemplateBinding Background}" 
+                        BorderBrush="#CCCCCC" 
+                        BorderThickness="1" 
+                        CornerRadius="8" 
+                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="ButtonContent" 
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="Gray"/>
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="Gray"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Background="GhostWhite">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Visibility="Hidden" Name="EntryView" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <Border Width="100" Height="100" HorizontalAlignment="Center">
+                <Image Stretch="UniformToFill" Source="/logo.png">
+
+                </Image>
+                
+            </Border>
+            <Label Content="Викторина" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="Проверьте свои знания на открытой дороге" TextWrapping="Wrap"/>
+
+            <Button Name="StartGame" Margin="0,10,0,0" Content="Начать игру" Click="StartGame_Click"/>
+        </StackPanel>
+
+        <Border Visibility="Hidden" Name="GuideInfo" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="4" 
+                Background="White" BorderBrush="#E0E0E0" BorderThickness="2" CornerRadius="15"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Padding="50">
+            <StackPanel MaxWidth="1000">
+                <Image Source="/logo.png" Width="100" Height="100" Stretch="UniformToFill"/>
+                <Label Content="Как играть?" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,15"/>
+                <Border Margin="0,5">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="1." VerticalAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Text="Прочитайте задание и выберите верный ответ" TextWrapping="Wrap" MaxWidth="700" MinWidth="100" VerticalAlignment="Center" Margin="12.5,0,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,5">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="2." VerticalAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Text="Отвечайте правильно, чтобы уклонятся от приближающихся препятсвий" TextWrapping="Wrap" MaxWidth="700" MinWidth="100" VerticalAlignment="Center" Margin="12.5,0,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Margin="0,5">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="3." VerticalAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Text="Ответьте неправильно, и ваша машина врежется в препятствие, потеряв жизнь." TextWrapping="Wrap" MaxWidth="700" MinWidth="100" VerticalAlignment="Center" Margin="12.5,0,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Button Name="StartGameAfterGuide" Content="Начнем же игру" Click="StartGameAfterGuide_Click" Margin="0,20,0,0"/>
+            </StackPanel>
+        </Border>
+
+
+        <Border Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="10">
+
+        </Border>
+
+        <StackPanel Name="GamePanel" Grid.RowSpan="4" Grid.ColumnSpan="4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="20">
+                    <Label Content="Счет"/>
+                    <TextBlock Text="{Binding CurrentPoints}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="3" Margin="20" HorizontalAlignment="Center">
+                    <Label Content="Жизни"/>
+                    <TextBlock Text="{Binding ActiveGame.Lifes}"/>
+                </StackPanel>
+
+
+                <Border Name="GamePage" Height="auto" Grid.Row="2" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2">
+                    <StackPanel>
+                        <TextBlock Text="{Binding ActiveGame.QuestionNumber, StringFormat='Вопрос {0} из 10'}" HorizontalAlignment="Stretch"/>
+                        <TextBlock Width="530" TextWrapping="Wrap" MaxHeight="100" Text="{Binding ActiveGame.CurrentQuestion.Text}" Margin="0,25,0,25" FontWeight="Bold" TextAlignment="Center"/>
+
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Кнопки с автоматическим переносом длинного текста -->
+                            <Button Name="ABtn" Grid.Row="0" Grid.Column="0" Content="{Binding ActiveGame.CurrentQuestion.Options[0]}" Click="ABtn_Click"/>
+                            <Button Name="BBtn" Grid.Row="0" Grid.Column="1" Content="{Binding ActiveGame.CurrentQuestion.Options[1]}" Click="BBtn_Click"/>
+                            <Button Name="CBtn" Grid.Row="1" Grid.Column="0" Content="{Binding ActiveGame.CurrentQuestion.Options[2]}" Click="CBtn_Click"/>
+                            <Button Name="DBtn" Grid.Row="1" Grid.Column="1" Content="{Binding ActiveGame.CurrentQuestion.Options[3]}" Click="DBtn_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+
+        <helix:HelixViewport3D x:Name="MyViewport"
+                IsRotationEnabled="False" 
+                IsMoveEnabled="False" 
+                IsZoomEnabled="False"
+                ShowViewCube="False"
+                Visibility="Hidden"
+                Width="1600"
+                Height="450"
+                Grid.ColumnSpan="99" Grid.RowSpan="99"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom">
+
+            <helix:HelixViewport3D.Camera>
+                <PerspectiveCamera x:Name="TheCamera" Position="0, 16, -19" LookDirection="0,-16, 7.3"/>
+            </helix:HelixViewport3D.Camera>
+
+            <helix:DefaultLights/>
+        </helix:HelixViewport3D>
+       
+
+    </Grid>
+</Window>
